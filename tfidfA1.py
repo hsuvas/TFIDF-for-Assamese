@@ -1,5 +1,9 @@
-#import pandas as pd
+
+import nltk
+import pandas as pd
 #-*- encoding: utf-8 -*-
+
+#computation of TF
 
 def computeTF(wordDict, bow):
     tfDict = {}
@@ -7,6 +11,8 @@ def computeTF(wordDict, bow):
     for word, count in wordDict.items():
         tfDict[word] = count/float(bowCount)
     return tfDict
+
+#computation of IDF
 
 def computeIDF(docList):
     import math
@@ -24,32 +30,37 @@ def computeIDF(docList):
         
     return idfDict
 
+#computation of TF-IDF
+
 def computeTFIDF(tfBow, idfs):
     tfidf = {}
     for word, val in tfBow.items():
         tfidf[word] = val*idfs[word]
     return tfidf
 
-with open(r'C:\Users\ASUS\Desktop\Assssss.txt', 'r',encoding='UTF16') as file:
-    data = file.read().replace('\n', ' ')
-    data2=data.replace('\t', ' ')
+#preprocessing: Stop words Removal
 
-docAS=data2.split(' ')
-print(len(docAS))
-#print(docA)
+def stop_remove(f):
+    with f as file:
+        data = file.read().replace('\n', ' ')
+        data2=data.replace('\t', ' ')
 
-#stop Word removal attempt(see prototype.py)
-fh=open(r'C:\Users\ASUS\Desktop\stop_words_as.txt','r',encoding='UTF-16-le')
-fh2=fh.read()
+    docAS=data2.split(' ')
 
+    fh=open(r'C:\Users\ASUS\Desktop\stop_words_ass.txt','r',encoding='UTF16')   #stop words file
+    fh2=fh.read()
 
-for word in data2:
-    for w in fh2:
-        if(word==w):
-           data2=data2.replace(w,'')
-docA=data2.split(' ')
-print(len(docA))
-docB = "কিন্তু প্ৰকৃততে যি পৰিবেশ আৰু পটভূমি অসমীয়া উপন্যাস সাহিত্যত প্ৰতিষ্ঠা হয়"
+    wt=nltk.word_tokenize(fh2)
+
+    for word in docAS:
+        if word in wt:
+            docAS.remove(word)
+            return docAS
+    
+f=open(r'C:\Users\ASUS\Desktop\as.txt', 'r',encoding='UTF16')       #file to calculate TF_IDF
+docA= stop_remove(f)
+print(docA)
+docB = "কিন্তু প্ৰকৃততে যি পৰিবেশ আৰু পটভূমি অসমীয়া উপন্যাস সাহিত্যত প্ৰতিষ্ঠা হয়"  #test sentence, can add another file here also
 bowA = docA
 bowB = docB.split(" ")
 #print(bowA)
